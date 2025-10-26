@@ -62,23 +62,26 @@ const SubscriptionPayment = () => {
   }
 
   const fireConfetti = () => {
+    console.log("🎉 Firing confetti!");
     const duration = 3000;
     const end = Date.now() + duration;
 
     const frame = () => {
       confetti({
-        particleCount: 7,
+        particleCount: 10,
         angle: 60,
-        spread: 55,
-        origin: { x: 0, y: 1 },
+        spread: 70,
+        origin: { x: 0, y: 0.8 },
         colors: ["#ff6b9d", "#c44569", "#ffa502", "#ff6348", "#ff4757"],
+        zIndex: 9999,
       });
       confetti({
-        particleCount: 7,
+        particleCount: 10,
         angle: 120,
-        spread: 55,
-        origin: { x: 1, y: 1 },
+        spread: 70,
+        origin: { x: 1, y: 0.8 },
         colors: ["#ff6b9d", "#c44569", "#ffa502", "#ff6348", "#ff4757"],
+        zIndex: 9999,
       });
 
       if (Date.now() < end) {
@@ -214,16 +217,21 @@ const SubscriptionPayment = () => {
         if (error) throw error;
       }
 
-      fireConfetti();
-
+      // Show success toast first
       toast({
         title: "Success! 🎉",
         description: "Your subscription has been activated",
       });
 
+      // Fire confetti immediately after toast
+      setTimeout(() => {
+        fireConfetti();
+      }, 100);
+
+      // Navigate to dashboard after confetti
       setTimeout(() => {
         navigate("/dashboard");
-      }, 3000);
+      }, 3500);
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         toast({
