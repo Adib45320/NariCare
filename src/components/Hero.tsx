@@ -4,7 +4,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
-  const whatsappLink = "https://wa.me/8801XXXXXXXXX?text=Hi! I want to start my monthly NariCare subscription.";
+  const whatsappLink = "https://wa.me/8801763636997?text=Hi! I want to start my monthly NariCare subscription.";
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

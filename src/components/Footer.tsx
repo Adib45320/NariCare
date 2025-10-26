@@ -1,7 +1,7 @@
 import { MessageCircle, Instagram, Facebook, Mail } from "lucide-react";
 
 const Footer = () => {
-  const whatsappLink = "https://wa.me/8801XXXXXXXXX";
+  const whatsappLink = "https://wa.me/8801763636997";
   
   return (
     <footer className="bg-foreground/5 py-12">
