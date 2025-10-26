@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar } from "@/components/ui/calendar";
 import { parseISO, isSameDay, isWithinInterval, addDays } from "date-fns";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Minimize2, Maximize2 } from "lucide-react";
 
 interface CalendarViewProps {
   periodData: any[];
@@ -9,6 +11,7 @@ interface CalendarViewProps {
 
 const CalendarView = ({ periodData }: CalendarViewProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [isMinimized, setIsMinimized] = useState(false);
 
   // Get the most recent period data
   const latestPeriod = periodData[0];
@@ -69,22 +72,37 @@ const CalendarView = ({ periodData }: CalendarViewProps) => {
 
   return (
     <Card className="border-primary/20 shadow-soft">
-      <CardHeader>
-        <CardTitle>Cycle Calendar</CardTitle>
-        <CardDescription>
-          <div className="flex flex-wrap gap-4 mt-2">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-accent"></div>
-              <span className="text-sm">Last Period</span>
+      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
+        <div className="space-y-1.5">
+          <CardTitle>Cycle Calendar</CardTitle>
+          <CardDescription>
+            <div className="flex flex-wrap gap-4 mt-2">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded-full bg-accent"></div>
+                <span className="text-sm">Last Period</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded-full bg-primary/30 border-2 border-dashed border-primary"></div>
+                <span className="text-sm">Predicted Period</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-primary/30 border-2 border-dashed border-primary"></div>
-              <span className="text-sm">Predicted Period</span>
-            </div>
-          </div>
-        </CardDescription>
+          </CardDescription>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsMinimized(!isMinimized)}
+          className="h-8 w-8"
+        >
+          {isMinimized ? (
+            <Maximize2 className="h-4 w-4" />
+          ) : (
+            <Minimize2 className="h-4 w-4" />
+          )}
+        </Button>
       </CardHeader>
-      <CardContent className="flex justify-center">
+      {!isMinimized && (
+        <CardContent className="flex justify-center">
         <Calendar
           mode="single"
           selected={selectedDate}
@@ -94,6 +112,7 @@ const CalendarView = ({ periodData }: CalendarViewProps) => {
           className="pointer-events-auto rounded-lg border shadow-sm"
         />
       </CardContent>
+      )}
     </Card>
   );
 };

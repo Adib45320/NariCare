@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import SubscriptionSelection from "./pages/SubscriptionSelection";
+import SubscriptionPlan from "./pages/SubscriptionPlan";
 import SubscriptionPayment from "./pages/SubscriptionPayment";
 import SubscriptionManage from "./pages/SubscriptionManage";
 import Admin from "./pages/Admin";
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/subscribe" element={<SubscriptionSelection />} />
+          <Route path="/subscribe/plan" element={<SubscriptionPlan />} />
           <Route path="/subscribe/payment" element={<SubscriptionPayment />} />
           <Route path="/subscription-manage" element={<SubscriptionManage />} />
           <Route path="/admin" element={<Admin />} />

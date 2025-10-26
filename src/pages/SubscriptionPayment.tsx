@@ -40,7 +40,7 @@ const SubscriptionPayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { products, total, deliveryDate, padType, quantity, padLabel, price } = location.state || {};
+  const { products, total, deliveryDate, padType, quantity, padLabel, price, subscriptionPlan, subscriptionPrice } = location.state || {};
 
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
@@ -162,26 +162,25 @@ const SubscriptionPayment = () => {
       }
 
       // Insert subscription data
+      // Determine which table to use based on subscription plan
+      const tableName = subscriptionPlan === "Basic" ? "normal_subscriptions" : "premium_subscriptions";
+      
       if (isCartFormat && products) {
         // Handle multiple products from cart
         const subscriptionPromises = products.map((product: any) =>
-          supabase.from("subscriptions").insert({
+          supabase.from(tableName as any).insert({
             user_id: user.id,
-            full_name: fullName,
-            pad_type: product.value,
+            product_name: product.label,
+            product_packs: product.packs,
             quantity: product.quantity,
+            unit_price: product.unitPrice,
+            line_total: product.lineTotal,
+            monthly_total: total,
+            subscription_price: subscriptionPrice || 100,
             delivery_date: deliveryDate,
-            subscription_start_date: new Date().toISOString().split("T")[0],
             payment_method: paymentMethod,
-            payment_notification_date: format(
-              paymentNotificationDate,
-              "yyyy-MM-dd"
-            ),
-            card_last_four:
-              paymentMethod === "card" ? cardNumber.slice(-4) : null,
+            transaction_id: paymentMethod === "card" ? cardNumber.slice(-4) : null,
             bkash_number: paymentMethod === "bkash" ? bkashNumber : null,
-            nagad_number: paymentMethod === "nagad" ? nagadNumber : null,
-            delivery_address: address,
             status: "active",
           })
         );
@@ -194,23 +193,18 @@ const SubscriptionPayment = () => {
         }
       } else {
         // Handle single product (old format)
-        const { error } = await supabase.from("subscriptions").insert({
+        const { error } = await supabase.from(tableName as any).insert({
           user_id: user.id,
-          full_name: fullName,
-          pad_type: padType,
+          product_name: padLabel || padType,
           quantity: parseInt(quantity),
+          unit_price: price,
+          line_total: price * parseInt(quantity),
+          monthly_total: price * parseInt(quantity),
+          subscription_price: subscriptionPrice || 100,
           delivery_date: deliveryDate,
-          subscription_start_date: new Date().toISOString().split("T")[0],
           payment_method: paymentMethod,
-          payment_notification_date: format(
-            paymentNotificationDate,
-            "yyyy-MM-dd"
-          ),
-          card_last_four:
-            paymentMethod === "card" ? cardNumber.slice(-4) : null,
+          transaction_id: paymentMethod === "card" ? cardNumber.slice(-4) : null,
           bkash_number: paymentMethod === "bkash" ? bkashNumber : null,
-          nagad_number: paymentMethod === "nagad" ? nagadNumber : null,
-          delivery_address: address,
           status: "active",
         });
 
@@ -443,10 +437,22 @@ const SubscriptionPayment = () => {
                         </p>
                       </div>
                     ))}
-                    <p className="pt-2 font-bold text-lg">
-                      <span className="font-medium">Monthly Total:</span> ৳{total}
+                    <div className="pt-2 pb-2 border-b">
+                      <p className="font-medium">
+                        Products Subtotal: ৳{total}
+                      </p>
+                    </div>
+                    {subscriptionPlan && (
+                      <div className="pt-2 pb-2 border-b">
+                        <p className="font-medium">
+                          Subscription Fee ({subscriptionPlan}): ৳{subscriptionPrice || 100}
+                        </p>
+                      </div>
+                    )}
+                    <p className="pt-3 font-bold text-xl text-primary">
+                      Total Amount: ৳{total + (subscriptionPrice || 100)}
                     </p>
-                    <p>
+                    <p className="pt-2">
                       <span className="font-medium">Delivery Date:</span>{" "}
                       {format(new Date(deliveryDate), "MMMM do")} of each month
                     </p>

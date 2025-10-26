@@ -135,7 +135,7 @@ const SubscriptionSelection = () => {
       return;
     }
 
-    navigate("/subscribe/payment", {
+    navigate("/subscribe/plan", {
       state: {
         products: cart.map(item => ({
           value: item.value,

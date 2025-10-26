@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Minimize2, Maximize2 } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +21,7 @@ const PeriodTrackerForm = ({ userId, onDataUpdate }: PeriodTrackerFormProps) => 
   const [endDate, setEndDate] = useState<Date>();
   const [cycleLength, setCycleLength] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,13 +100,28 @@ const PeriodTrackerForm = ({ userId, onDataUpdate }: PeriodTrackerFormProps) => 
 
   return (
     <Card className="border-primary/20 shadow-soft">
-      <CardHeader>
-        <CardTitle>Track Your Cycle</CardTitle>
-        <CardDescription>
-          Enter your period dates to get AI-powered predictions
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <div className="space-y-1.5">
+          <CardTitle>Track Your Cycle</CardTitle>
+          <CardDescription>
+            Enter your period dates to get AI-powered predictions
+          </CardDescription>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsMinimized(!isMinimized)}
+          className="h-8 w-8"
+        >
+          {isMinimized ? (
+            <Maximize2 className="h-4 w-4" />
+          ) : (
+            <Minimize2 className="h-4 w-4" />
+          )}
+        </Button>
       </CardHeader>
-      <CardContent>
+      {!isMinimized && (
+        <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -186,6 +202,7 @@ const PeriodTrackerForm = ({ userId, onDataUpdate }: PeriodTrackerFormProps) => 
           </Button>
         </form>
       </CardContent>
+      )}
     </Card>
   );
 };

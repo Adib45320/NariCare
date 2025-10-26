@@ -132,14 +132,22 @@ const ProductRecommendations = ({ nextPeriodDate, userId }: ProductRecommendatio
               <CardDescription>{product.description}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-2xl font-bold text-primary">৳{product.price}</p>
-              <Button
-                variant="cta"
-                className="w-full"
-                onClick={() => handleOrder(product)}
-              >
-                Order Now
-              </Button>
+              {product.id === 1 ? (
+                <>
+                  <p className="text-2xl font-bold text-primary">৳{product.price}</p>
+                  <Button
+                    variant="cta"
+                    className="w-full"
+                    onClick={() => handleOrder(product)}
+                  >
+                    Order Now
+                  </Button>
+                </>
+              ) : (
+                <div className="text-center py-4 bg-white rounded-lg">
+                  <p className="text-lg font-semibold text-pink-500">Coming Soon</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}
