@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <div>
-            <h3 className="text-2xl font-bold mb-2">নারিCare</h3>
+            <h3 className="text-2xl font-bold mb-2">নারীCare</h3>
             <p className="text-muted-foreground">
               Care, comfort, and confidence — every month.
             </p>
