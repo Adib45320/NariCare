@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [periodData, setPeriodData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -34,6 +35,7 @@ const Dashboard = () => {
           setTimeout(() => {
             fetchProfile(currentSession.user.id);
             fetchPeriodData(currentSession.user.id);
+            checkActiveSubscription(currentSession.user.id);
           }, 0);
         }
       }
@@ -50,6 +52,7 @@ const Dashboard = () => {
         setTimeout(() => {
           fetchProfile(currentSession.user.id);
           fetchPeriodData(currentSession.user.id);
+          checkActiveSubscription(currentSession.user.id);
         }, 0);
       }
       setIsLoading(false);
@@ -94,6 +97,17 @@ const Dashboard = () => {
     } else {
       setPeriodData(data || []);
     }
+  };
+
+  const checkActiveSubscription = async (userId: string) => {
+    const { data } = await supabase
+      .from("subscriptions")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("status", "active")
+      .maybeSingle();
+
+    setHasActiveSubscription(!!data);
   };
 
   const handleLogout = async () => {
@@ -152,10 +166,17 @@ const Dashboard = () => {
                 Admin
               </Button>
             )}
-            <Button variant="cta" onClick={() => navigate("/subscribe")}>
-              <Heart className="mr-2 h-4 w-4" />
-              Subscribe
-            </Button>
+            {hasActiveSubscription ? (
+              <Button variant="cta" onClick={() => navigate("/subscription-manage")}>
+                <Heart className="mr-2 h-4 w-4" />
+                Manage Subscription
+              </Button>
+            ) : (
+              <Button variant="cta" onClick={() => navigate("/subscribe")}>
+                <Heart className="mr-2 h-4 w-4" />
+                Subscribe
+              </Button>
+            )}
             <Button variant="outline" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               Logout
