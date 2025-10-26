@@ -3,21 +3,25 @@ import { Package, Clock, MessageCircle, Heart } from "lucide-react";
 const benefits = [
   {
     icon: Package,
+    emoji: "📦",
     title: "Discreet plain packaging",
     description: "Your privacy matters to us"
   },
   {
     icon: Clock,
+    emoji: "⏰",
     title: "Always on time",
     description: "Never run out unexpectedly"
   },
   {
     icon: MessageCircle,
+    emoji: "💬",
     title: "Flexible schedule & payment",
     description: "Pause, skip, or modify anytime"
   },
   {
     icon: Heart,
+    emoji: "💗",
     title: "Trusted brands only",
     description: "Quality products you can rely on"
   }
@@ -40,14 +44,17 @@ const WhyChoose = () => {
           {benefits.map((benefit, index) => (
             <div 
               key={index}
-              className="flex flex-col items-center text-center p-6 bg-card rounded-3xl shadow-card hover:shadow-soft transition-all duration-300"
+              className="flex flex-col items-center justify-center text-center p-4 bg-card rounded-3xl shadow-card hover:shadow-soft transition-all duration-300"
             >
-              <div className="w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mb-4">
-                <benefit.icon className="w-8 h-8 text-white" />
+              <div className="w-full flex items-center justify-center mb-2">
+                <div className="text-7xl">{benefit.emoji}</div>
+              </div>
+              <div className="w-12 h-12 bg-gradient-accent rounded-2xl flex items-center justify-center mb-3 mx-auto">
+                <benefit.icon className="w-6 h-6 text-white" />
               </div>
               
-              <h3 className="font-semibold text-lg mb-2">{benefit.title}</h3>
-              <p className="text-muted-foreground text-sm">{benefit.description}</p>
+              <h3 className="font-semibold text-xl mb-2 w-full text-center">{benefit.title}</h3>
+              <p className="text-muted-foreground text-base w-full text-center">{benefit.description}</p>
             </div>
           ))}
         </div>
