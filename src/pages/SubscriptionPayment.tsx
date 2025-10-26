@@ -162,25 +162,24 @@ const SubscriptionPayment = () => {
       }
 
       // Insert subscription data
-      // Determine which table to use based on subscription plan
-      const tableName = subscriptionPlan === "Basic" ? "normal_subscriptions" : "premium_subscriptions";
+      // For now, use the existing subscriptions table until Supabase types are regenerated
       
       if (isCartFormat && products) {
         // Handle multiple products from cart
         const subscriptionPromises = products.map((product: any) =>
-          supabase.from(tableName as any).insert({
+          supabase.from("subscriptions").insert({
             user_id: user.id,
-            product_name: product.label,
-            product_packs: product.packs,
+            full_name: fullName,
+            pad_type: product.value,
             quantity: product.quantity,
-            unit_price: product.unitPrice,
-            line_total: product.lineTotal,
-            monthly_total: total,
-            subscription_price: subscriptionPrice || 100,
             delivery_date: deliveryDate,
+            delivery_address: address,
+            subscription_start_date: new Date().toISOString().split("T")[0],
             payment_method: paymentMethod,
-            transaction_id: paymentMethod === "card" ? cardNumber.slice(-4) : null,
+            payment_notification_date: paymentNotificationDate ? format(paymentNotificationDate, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
+            card_last_four: paymentMethod === "card" ? cardNumber.slice(-4) : null,
             bkash_number: paymentMethod === "bkash" ? bkashNumber : null,
+            nagad_number: paymentMethod === "nagad" ? nagadNumber : null,
             status: "active",
           })
         );
@@ -193,18 +192,19 @@ const SubscriptionPayment = () => {
         }
       } else {
         // Handle single product (old format)
-        const { error } = await supabase.from(tableName as any).insert({
+        const { error } = await supabase.from("subscriptions").insert({
           user_id: user.id,
-          product_name: padLabel || padType,
+          full_name: fullName,
+          pad_type: padType,
           quantity: parseInt(quantity),
-          unit_price: price,
-          line_total: price * parseInt(quantity),
-          monthly_total: price * parseInt(quantity),
-          subscription_price: subscriptionPrice || 100,
           delivery_date: deliveryDate,
+          delivery_address: address,
+          subscription_start_date: new Date().toISOString().split("T")[0],
           payment_method: paymentMethod,
-          transaction_id: paymentMethod === "card" ? cardNumber.slice(-4) : null,
+          payment_notification_date: paymentNotificationDate ? format(paymentNotificationDate, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
+          card_last_four: paymentMethod === "card" ? cardNumber.slice(-4) : null,
           bkash_number: paymentMethod === "bkash" ? bkashNumber : null,
+          nagad_number: paymentMethod === "nagad" ? nagadNumber : null,
           status: "active",
         });
 
