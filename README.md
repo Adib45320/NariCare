@@ -39,5 +39,26 @@ To build practical digital solutions that improve wellbeing, accessibility, and 
 
 ---
 
-## 📂 Project Structure (Example)
+## 🚀 Future Roadmap
+
+- 📱 Mobile-first experience
+- 🔐 Secure user system
+- 🧠 Smart assistance features
+- 📊 Personalized recommendations
+- 🌐 Scalable platform architecture
+
+---
+
+## 👨‍💻 Author
+
+Built by **Adib Syed**  
+CSE Student @ AIUB  
+Founder @ AR Solution
+
+---
+
+## ⭐ Support
+
+If you believe in meaningful tech projects, feel free to star this repo.
+
 
