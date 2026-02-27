@@ -38,7 +38,7 @@ const Hero = () => {
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Subscribe once — we'll deliver your pads discreetly and reliably every month.
+            Care, Confidence, Comfort.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
