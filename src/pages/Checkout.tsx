@@ -47,6 +47,23 @@ const Checkout = () => {
     }
   }, [orderData, navigate]);
 
+  // Test Supabase connection
+  useEffect(() => {
+    const testConnection = async () => {
+      try {
+        const { data, error } = await supabase.from("orders").select("id").limit(1);
+        if (error) {
+          console.error("Supabase connection test failed:", error);
+        } else {
+          console.log("Supabase connection successful");
+        }
+      } catch (err) {
+        console.error("Supabase connection error:", err);
+      }
+    };
+    testConnection();
+  }, []);
+
   if (!orderData) return null;
 
   // Support both old single-product and new multi-product cart formats
@@ -152,7 +169,7 @@ const Checkout = () => {
       }, 3000);
     } catch (error: any) {
       console.error("Error placing order:", error);
-      toast.error("Failed to place order. Please try again.");
+      toast.error(`Failed to place order: ${error.message || 'Please try again.'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -314,7 +331,7 @@ const Checkout = () => {
                 variant="cta"
                 className="w-full"
                 onClick={handlePlaceOrder}
-                disabled={isSubmitting}
+                disabled={isSubmitting || !address.trim() || !transactionId.trim()}
               >
                 {isSubmitting ? "Placing Order..." : "Place Order"}
               </Button>

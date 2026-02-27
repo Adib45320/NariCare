@@ -196,7 +196,7 @@ const PeriodTrackerForm = ({ userId, onDataUpdate }: PeriodTrackerFormProps) => 
             type="submit"
             variant="cta"
             className="w-full"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !startDate || !endDate}
           >
             {isSubmitting ? "Tracking..." : "Track My Cycle"}
           </Button>

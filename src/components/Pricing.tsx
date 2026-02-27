@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Check, ShoppingCart, Trash2, Plus } from "lucide-react";
+import { Check, ShoppingCart, Trash2, Plus, CalendarIcon } from "lucide-react";
 import { 
   Select, 
   SelectContent, 
@@ -7,6 +7,10 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -22,7 +26,7 @@ const Pricing = () => {
   const navigate = useNavigate();
   const [selectedPad, setSelectedPad] = useState("");
   const [selectedQuantity, setSelectedQuantity] = useState("1");
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedPayment, setSelectedPayment] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -43,11 +47,7 @@ const Pricing = () => {
     label: `${i + 1}`
   }));
 
-  const dateOptions = [
-    { value: "weekly", label: "Weekly Delivery" },
-    { value: "monthly", label: "Monthly Delivery" },
-    { value: "custom", label: "Custom Schedule" }
-  ];
+
 
   const paymentOptions = [
     { value: "bkash", label: "bKash" },
@@ -140,7 +140,7 @@ const Pricing = () => {
           lineTotal: parsePrice(item.price) * item.quantity
         })),
         total,
-        deliverySchedule: dateOptions.find(d => d.value === selectedDate)?.label || "",
+        deliverySchedule: selectedDate ? format(selectedDate, "PPP") : "",
         paymentMethod: paymentOptions.find(p => p.value === selectedPayment)?.label || "",
       }
     });
@@ -287,20 +287,31 @@ const Pricing = () => {
                 {/* Date/Delivery Selection */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">
-                    Delivery Schedule
+                    Delivery Date
                   </label>
-                  <Select value={selectedDate} onValueChange={setSelectedDate}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select delivery schedule" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {dateOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "PPP") : "Pick a delivery date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 {/* Payment Method Selection */}

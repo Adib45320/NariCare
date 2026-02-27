@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -17,8 +18,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Package, CheckCircle2, Sparkles, ShoppingCart, Trash2, Plus } from "lucide-react";
-import { format } from "date-fns";
+import { CalendarIcon, Package, CheckCircle2, Sparkles, ShoppingCart, Trash2, Plus, Info } from "lucide-react";
+import { format, subDays, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import heroBg from "@/assets/hero-bg.jpg";
 import { toast } from "sonner";
@@ -37,6 +38,25 @@ const SubscriptionSelection = () => {
   const [quantity, setQuantity] = useState("1");
   const [deliveryDate, setDeliveryDate] = useState<Date>();
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [nextPeriodDate, setNextPeriodDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const fetchPeriodData = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("period_data")
+        .select("next_period_date")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+      if (data?.next_period_date) {
+        setNextPeriodDate(parseISO(data.next_period_date));
+      }
+    };
+    fetchPeriodData();
+  }, []);
 
   const products = [
     { value: "senora-15", label: "Senora Panty Sanitary Napkin", packs: "15 Pads", price: "৳180", popular: false },
@@ -358,13 +378,42 @@ const SubscriptionSelection = () => {
                     disabled={(date) => date < new Date()}
                     initialFocus
                     className={cn("p-3 pointer-events-auto")}
+                    modifiers={nextPeriodDate ? { periodStart: [nextPeriodDate] } : {}}
+                    modifiersClassNames={{
+                      periodStart: "bg-red-100 text-red-700 font-bold ring-2 ring-red-400 ring-offset-1 rounded-full",
+                    }}
                   />
+                  {nextPeriodDate && (
+                    <div className="px-3 pb-3 text-xs text-muted-foreground flex items-start gap-1.5">
+                      <span className="mt-0.5 text-red-400">●</span>
+                      <span>Highlighted date = predicted period start ({format(nextPeriodDate, "MMM d")})</span>
+                    </div>
+                  )}
                 </PopoverContent>
               </Popover>
               <p className="text-sm text-muted-foreground flex items-center gap-2">
                 <Package className="w-4 h-4" />
                 Your subscription will arrive on this date every month
               </p>
+
+              {nextPeriodDate && (
+                <div className="flex items-start gap-2 rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-700">
+                  <Info className="w-4 h-4 shrink-0 mt-0.5" />
+                  <p>
+                    Your period tracker shows your period might start on{" "}
+                    <span className="font-semibold">{format(nextPeriodDate, "MMMM d")}</span>.
+                    We recommend setting your delivery date to{" "}
+                    <button
+                      type="button"
+                      className="font-semibold underline underline-offset-2 hover:text-red-900"
+                      onClick={() => setDeliveryDate(subDays(nextPeriodDate, 2))}
+                    >
+                      {format(subDays(nextPeriodDate, 2), "MMMM d")}
+                    </button>{" "}
+                    (2 days before) so your pads arrive just in time.
+                  </p>
+                </div>
+              )}
 
               <Button
                 onClick={handleContinueToPayment}

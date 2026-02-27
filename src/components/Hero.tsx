@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Sparkles } from "lucide-react";
+import { MessageCircle, Sparkles, ShoppingBag } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import OrderDialog from "@/components/OrderDialog";
 
 const Hero = () => {
+  const [orderOpen, setOrderOpen] = useState(false);
   const whatsappLink = "https://wa.me/8801763636997?text=Hi! I want to start my monthly NariCare subscription.";
 
   return (
@@ -43,14 +46,12 @@ const Hero = () => {
               size="lg" 
               variant="cta"
               className="text-base px-8 py-6 rounded-2xl"
-              asChild
+              onClick={() => setOrderOpen(true)}
             >
-              <Link to="/signup">
-                <Sparkles className="mr-2" />
-                Get Started Free 💕
-              </Link>
+              <ShoppingBag className="mr-2" />
+              Order Now 💕
             </Button>
-            
+
             <Button 
               size="lg" 
               variant="outline"
@@ -71,6 +72,8 @@ const Hero = () => {
           </p>
         </div>
       </div>
+
+      <OrderDialog open={orderOpen} onOpenChange={setOrderOpen} />
     </section>
   );
 };

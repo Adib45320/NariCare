@@ -104,7 +104,7 @@ const Dashboard = () => {
       .from("subscriptions")
       .select("id")
       .eq("user_id", userId)
-      .eq("status", "active")
+      .in("status", ["active", "not_verified"])
       .maybeSingle();
 
     setHasActiveSubscription(!!data);

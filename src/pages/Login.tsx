@@ -140,7 +140,7 @@ const Login = () => {
                 type="submit"
                 variant="cta"
                 className="w-full"
-                disabled={isLoading}
+                disabled={isLoading || !email.trim() || !password.trim()}
               >
                 {isLoading ? "Logging in..." : "Login"}
               </Button>

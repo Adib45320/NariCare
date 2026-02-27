@@ -134,7 +134,6 @@ const ProductRecommendations = ({ nextPeriodDate, userId }: ProductRecommendatio
             <CardContent className="space-y-3">
               {product.id === 1 ? (
                 <>
-                  <p className="text-2xl font-bold text-primary">৳{product.price}</p>
                   <Button
                     variant="cta"
                     className="w-full"

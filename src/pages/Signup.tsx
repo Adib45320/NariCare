@@ -193,7 +193,14 @@ const Signup = () => {
                 type="submit"
                 variant="cta"
                 className="w-full"
-                disabled={isLoading}
+                disabled={
+                  isLoading ||
+                  !fullName.trim() ||
+                  !email.trim() ||
+                  password.length < 6 ||
+                  !confirmPassword.trim() ||
+                  password !== confirmPassword
+                }
               >
                 {isLoading ? "Creating account..." : "Create Account"}
               </Button>
