@@ -29,16 +29,16 @@ const Hero = () => {
           </div>
           
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
-            Your Period,{" "}
+            Care,{" "}
             <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
-              On Time.
+              Confidence,
             </span>
             <br />
-            Every Month.
+            Comfort.
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Care, Confidence, Comfort.
+            Subscribe once — we'll deliver your pads discreetly and reliably every month.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
